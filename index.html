@@ -265,7 +265,7 @@ transform:scale(1);
 </div>
 
 <!-- Music -->
-<audio id="music" loop preload="auto">
+<audio id="music" loop preload="auto" playsinline webkit-playsinline>
 <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3" type="audio/mp3">
 </audio>
 
@@ -480,6 +480,66 @@ e.preventDefault();
 document.getElementById("rsvp-result").innerHTML =
 "<br><b>Terima kasih atas konfirmasinya ❤️</b>";
 }
+
+let audioUnlocked = false;
+
+function openInvitation(){
+
+const opening = document.getElementById("opening");
+opening.style.opacity="0";
+setTimeout(()=>{
+opening.style.display="none";
+},800);
+
+unlockAudio();
+
+}
+
+// unlock audio mobile
+function unlockAudio(){
+
+const music = document.getElementById("music");
+
+if(audioUnlocked) return;
+
+audioUnlocked = true;
+
+music.volume = 1;
+music.muted = false;
+music.currentTime = 0;
+
+// iOS fix
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+if(AudioContext){
+const ctx = new AudioContext();
+const source = ctx.createMediaElementSource(music);
+source.connect(ctx.destination);
+}
+
+// load dulu
+music.load();
+
+let playPromise = music.play();
+
+if(playPromise !== undefined){
+playPromise.catch(()=>{
+document.addEventListener("touchstart", unlockAudio, {once:true});
+document.addEventListener("click", unlockAudio, {once:true});
+});
+}
+
+}
+
+// tombol musik
+function toggleMusic(){
+const music = document.getElementById("music");
+if(music.paused){
+music.play();
+}else{
+music.pause();
+}
+}
+
 
 document.addEventListener("DOMContentLoaded", function(){
 const music = document.getElementById("music");
