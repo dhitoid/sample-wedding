@@ -499,6 +499,19 @@ transition:.3s;
 .music-player.playing .music-wave{
 opacity:1;
 }
+
+.calendar-btn{
+display:block;
+margin:10px auto;
+padding:12px 18px;
+border:none;
+background:#c08a95;
+color:white;
+border-radius:30px;
+cursor:pointer;
+width:220px;
+font-weight:600;
+}
 </style>
 </head>
 
@@ -541,10 +554,26 @@ opacity:1;
 </section>
 
 <section class="section">
+<div class="title">Save To Calendar</div>
+
+<button class="calendar-btn" onclick="addGoogle()">
+Tambah ke Google Calendar
+</button>
+
+<button class="calendar-btn" onclick="addApple()">
+Tambah ke Apple Calendar
+</button>
+
+<button class="calendar-btn" onclick="addOutlook()">
+Tambah ke Outlook
+</button>
+
+</section>
+
+<section class="section">
 <div class="title">Gallery Prewedding</div>
 <div class="gallery-slider">
 <div class="slides" id="slides">
-<div class="slider-dots" id="dots"></div>
 
 <div class="slide">
 <img src="https://images.unsplash.com/photo-1529634890524-0d1b7d0c3a3b">
@@ -560,6 +589,11 @@ opacity:1;
 
 <div class="slide">
 <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93">
+</div>
+
+</div>
+
+<div class="slider-dots" id="dots"></div>
 </div>
 
 </div>
@@ -647,36 +681,67 @@ Dhito & Tresia Wedding © 2028
 </footer>
 
 <script>
+const eventTitle = "Wedding Dhito & Tresia";
+const eventLocation = "Tangerang Selatan";
+const eventDescription = "Undangan Pernikahan Dhito & Tresia";
+const startDate = "20281111T020000Z";
+const endDate = "20281111T060000Z";
+
+function addGoogle(){
+window.open(
+`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${eventTitle}&dates=${startDate}/${endDate}&details=${eventDescription}&location=${eventLocation}`
+);
+}
+
+function addOutlook(){
+window.open(
+`https://outlook.live.com/calendar/0/deeplink/compose?subject=${eventTitle}&startdt=2028-11-11T09:00:00&enddt=2028-11-11T13:00:00&body=${eventDescription}&location=${eventLocation}`
+);
+}
+
+function addApple(){
+const ics = `
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+URL:${window.location.href}
+DTSTART:20281111T090000
+DTEND:20281111T130000
+SUMMARY:${eventTitle}
+DESCRIPTION:${eventDescription}
+LOCATION:${eventLocation}
+END:VEVENT
+END:VCALENDAR
+`;
+
+const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+const link = document.createElement('a');
+link.href = URL.createObjectURL(blob);
+link.download = "wedding-dhito-tresia.ics";
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+}
+
 // ===== GALLERY SWIPE =====
 let index = 0;
 const slides = document.getElementById("slides");
 const dotsContainer = document.getElementById("dots");
-
 const total = slides.children.length;
 
-// create dots
 for(let i=0;i<total;i++){
 let dot = document.createElement("span");
-dot.onclick = ()=>{ index=i; updateSlide(); }
+dot.addEventListener("click",()=>{
+index=i;
+updateSlide();
+});
 dotsContainer.appendChild(dot);
 }
 
 function updateDots(){
-document.querySelectorAll(".slider-dots span").forEach((d,i)=>{
-d.classList.toggle("active", i===index);
+document.querySelectorAll("#dots span").forEach((dot,i)=>{
+dot.classList.toggle("active",i===index);
 });
-}
-
-function nextSlide(){
-index++;
-if(index>total-1) index=0;
-updateSlide();
-}
-
-function prevSlide(){
-index--;
-if(index<0) index=total-1;
-updateSlide();
 }
 
 function updateSlide(){
@@ -684,7 +749,18 @@ slides.style.transform = `translateX(-${index * 100}%)`;
 updateDots();
 }
 
+function nextSlide(){
+index = (index + 1) % total;
+updateSlide();
+}
+
+function prevSlide(){
+index = (index - 1 + total) % total;
+updateSlide();
+}
+
 updateDots();
+setInterval(nextSlide,5000);
 
 // swipe
 let startX=0;
