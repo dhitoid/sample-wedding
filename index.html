@@ -152,7 +152,7 @@ margin-top:30px;
 </div>
 
 <!-- Music -->
-<audio id="music" loop>
+<audio id="music" loop playsinline>
 <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3">
 </audio>
 
@@ -199,23 +199,73 @@ src="https://maps.google.com/maps?q=Tangerang%20Selatan&output=embed">
 
 </section>
 
+<button onclick="shareWA()" 
+style="padding:12px 20px;border:none;background:#25D366;color:white;border-radius:8px;margin-top:20px">
+Share WhatsApp
+</button>
+
 <footer>
 Dhito & Tresia Wedding © 2028
 </footer>
 
 <script>
-
-// opening + autoplay music
+// ===== FIX AUDIO iPhone =====
 function openInvitation(){
-document.getElementById("opening").style.opacity="0";
-setTimeout(()=>{
-document.getElementById("opening").style.display="none";
-},1000);
+const opening = document.getElementById("opening");
+opening.style.opacity="0";
 
-let music = document.getElementById("music");
-music.volume = 0.7;
+setTimeout(()=>{
+opening.style.display="none";
+},800);
+
+const music = document.getElementById("music");
+music.muted = false;
+music.play().catch(()=>{
+document.addEventListener('touchstart', ()=>{
 music.play();
+},{once:true});
+});
 }
+
+// ===== SHARE WHATSAPP =====
+function shareWA(){
+let text = encodeURIComponent(
+"Undangan Pernikahan Dhito & Tresia\n\n11 November 2028\n\nSilakan buka undangan berikut:\n" + window.location.href
+);
+
+window.open("https://wa.me/?text="+text,"_blank");
+}
+
+// ===== ANIMASI BUNGA JATUH =====
+function createFlower(){
+const flower = document.createElement("div");
+flower.innerHTML="🌸";
+flower.style.position="fixed";
+flower.style.top="-20px";
+flower.style.left=Math.random()*100+"vw";
+flower.style.fontSize=(Math.random()*10+15)+"px";
+flower.style.opacity=Math.random();
+flower.style.animation="fall linear forwards";
+flower.style.animationDuration=(Math.random()*5+5)+"s";
+
+document.body.appendChild(flower);
+
+setTimeout(()=>{
+flower.remove();
+},10000);
+}
+
+setInterval(createFlower, 500);
+
+// ===== CSS animasi bunga =====
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes fall {
+to {
+transform: translateY(110vh) rotate(360deg);
+}
+}`;
+document.head.appendChild(style);
 
 // toggle music
 function toggleMusic(){
