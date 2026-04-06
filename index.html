@@ -434,21 +434,18 @@ opacity:1;
 transform:translateY(0);
 }
 
-/* music modern */
-.music-btn{
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.music-wave{
-opacity:.3;
-transition:.3s;
-}
-
 .music-player.playing .music-wave{
 opacity:1;
 }
+
+.music-player.playing .music-wave span{
+animation: equalizer 1s infinite ease-in-out;
+}
+
+.music-wave span:nth-child(1){animation-delay:0s}
+.music-wave span:nth-child(2){animation-delay:.2s}
+.music-wave span:nth-child(3){animation-delay:.4s}
+.music-wave span:nth-child(4){animation-delay:.6s}
 
 .calendar-btn{
 display:block;
@@ -478,7 +475,7 @@ font-weight:600;
 </div>
 
 <!-- Music -->
-<audio id="music" loop preload="auto" playsinline webkit-playsinline muted>
+<audio id="music" loop preload="auto" playsinline webkit-playsinline>
 <source src="https://cdn.pixabay.com/download/audio/2023/06/28/audio_06f6c9dc9b.mp3" type="audio/mp3">
 </audio>
 
@@ -827,7 +824,6 @@ document.getElementById("rsvp-result").innerHTML =
 "<br><b>Terima kasih atas konfirmasinya ❤️</b>";
 }
 
-
 // ================= MUSIC ENGINE PRO =================
 let audioCtx;
 let analyser;
@@ -854,8 +850,14 @@ musicStarted = true;
 
 const music = document.getElementById("music");
 const player = document.querySelector(".music-player");
+const btn = document.querySelector(".music-btn");
 
 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+if(audioCtx.state === "suspended"){
+audioCtx.resume();
+}
+
 source = audioCtx.createMediaElementSource(music);
 
 analyser = audioCtx.createAnalyser();
@@ -873,6 +875,7 @@ fadeIn(music);
 animateEQ();
 
 player.classList.add("playing");
+btn.innerHTML = "❚❚";
 }
 
 function fadeIn(audio){
@@ -881,7 +884,7 @@ let fade = setInterval(()=>{
 vol += 0.02;
 audio.volume = vol;
 
-if(vol >= 0.35){
+if(vol >= 0.4){
 clearInterval(fade);
 }
 },120);
@@ -901,7 +904,7 @@ analyser.getByteFrequencyData(dataArray);
 
 bars.forEach((bar,i)=>{
 let value = dataArray[i] / 255;
-let height = (value * 16) + 4;
+let height = (value * 18) + 4;
 bar.style.height = height + "px";
 });
 }
@@ -917,13 +920,17 @@ const btn = document.querySelector(".music-btn");
 const player = document.querySelector(".music-player");
 
 if(music.paused){
+
 music.play();
 player.classList.add("playing");
 btn.innerHTML = "❚❚";
+
 }else{
+
 music.pause();
 player.classList.remove("playing");
 btn.innerHTML = "▶";
+
 }
 }
 
