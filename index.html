@@ -298,17 +298,71 @@ z-index:9999;
 }
 
 .music-btn{
-background:#c08a95;
-color:white;
-border:none;
-width:42px;
-height:42px;
+position:relative;
+width:46px;
+height:46px;
 border-radius:50%;
+border:none;
+background:linear-gradient(135deg,#c08a95,#e8b7c1);
 cursor:pointer;
-font-size:16px;
 display:flex;
 align-items:center;
 justify-content:center;
+box-shadow:0 6px 15px rgba(0,0,0,0.15);
+transition:.3s;
+}
+
+.music-btn:hover{
+transform:scale(1.05);
+box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* PLAY ICON */
+.icon-play{
+width:0;
+height:0;
+border-left:12px solid white;
+border-top:8px solid transparent;
+border-bottom:8px solid transparent;
+margin-left:3px;
+transition:.3s;
+}
+
+/* PAUSE ICON */
+.icon-pause{
+position:absolute;
+width:14px;
+height:14px;
+display:flex;
+justify-content:space-between;
+opacity:0;
+transform:scale(.5);
+transition:.3s;
+}
+
+.icon-pause::before,
+.icon-pause::after{
+content:"";
+width:4px;
+height:14px;
+background:white;
+border-radius:2px;
+}
+
+/* saat playing */
+.music-player.playing .icon-play{
+opacity:0;
+transform:scale(.5);
+}
+
+.music-player.playing .icon-pause{
+opacity:1;
+transform:scale(1);
+}
+
+/* glow saat play */
+.music-player.playing .music-btn{
+box-shadow:0 0 15px rgba(192,138,149,.6);
 }
 
 .music-wave{
@@ -439,6 +493,7 @@ opacity:1;
 }
 
 .music-player.playing .music-wave span{
+background:linear-gradient(#c08a95,#e8b7c1);
 animation: equalizer 1s infinite ease-in-out;
 }
 
@@ -480,7 +535,10 @@ font-weight:600;
 </audio>
 
 <div class="music-player">
-<button class="music-btn" onclick="toggleMusic()">▶</button>
+<button class="music-btn" onclick="toggleMusic()">
+<span class="icon-play"></span>
+<span class="icon-pause"></span>
+</button>
 
 <div class="music-text">
 <div class="music-title">Dhito & Tresia Wedding</div>
@@ -905,17 +963,14 @@ loop();
 function toggleMusic(){
 
 const music = document.getElementById("music");
-const btn = document.querySelector(".music-btn");
 const player = document.querySelector(".music-player");
 
 if(music.paused){
 music.play();
 player.classList.add("playing");
-btn.innerHTML = "❚❚";
 }else{
 music.pause();
 player.classList.remove("playing");
-btn.innerHTML = "▶";
 }
 }
 
