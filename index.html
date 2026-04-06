@@ -138,6 +138,54 @@ color:white;
 padding:25px;
 margin-top:30px;
 }
+
+.timeline{
+max-width:600px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:20px;
+}
+
+.timeline-item{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+border-left:5px solid #c08a95;
+text-align:left;
+animation:fadeUp 1s ease;
+}
+
+.card-amplop{
+background:white;
+padding:20px;
+margin:10px auto;
+max-width:300px;
+border-radius:12px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+.card-amplop button{
+margin-top:10px;
+padding:8px 15px;
+border:none;
+background:#c08a95;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
 </style>
 </head>
 
@@ -152,8 +200,8 @@ margin-top:30px;
 </div>
 
 <!-- Music -->
-<audio id="music" loop playsinline>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3">
+<audio id="music" loop preload="auto" playsinline webkit-playsinline>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3" type="audio/mp3">
 </audio>
 
 <button class="music-btn" onclick="toggleMusic()">🎵</button>
@@ -186,6 +234,34 @@ src="https://maps.google.com/maps?q=Tangerang%20Selatan&output=embed">
 </section>
 
 <section class="section">
+<div class="title">Love Story</div>
+
+<div class="timeline">
+
+<div class="timeline-item">
+<h3>2024</h3>
+<p>Pertama kali bertemu dan mulai saling mengenal</p>
+</div>
+
+<div class="timeline-item">
+<h3>2026</h3>
+<p>Memutuskan untuk menjalin hubungan lebih serius</p>
+</div>
+
+<div class="timeline-item">
+<h3>2027</h3>
+<p>Lamaran sederhana penuh haru</p>
+</div>
+
+<div class="timeline-item">
+<h3>2028</h3>
+<p>Menuju hari bahagia pernikahan</p>
+</div>
+
+</div>
+</section>
+
+<section class="section">
 <div class="title">RSVP</div>
 
 <form class="rsvp" onsubmit="sendRSVP(event)">
@@ -199,6 +275,24 @@ src="https://maps.google.com/maps?q=Tangerang%20Selatan&output=embed">
 
 </section>
 
+<section class="section">
+<div class="title">Amplop Digital</div>
+
+<div class="card-amplop">
+<h3>Bank BCA</h3>
+<p>1234567890</p>
+<p>a.n Dhito</p>
+<button onclick="copyRek('1234567890')">Copy Rekening</button>
+</div>
+
+<div class="card-amplop">
+<h3>QRIS</h3>
+<img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/QR_code_for_mobile_English_Wikipedia.svg" width="150">
+<p>Scan QR untuk kirim hadiah</p>
+</div>
+
+</section>
+
 <button onclick="shareWA()" 
 style="padding:12px 20px;border:none;background:#25D366;color:white;border-radius:8px;margin-top:20px">
 Share WhatsApp
@@ -209,8 +303,8 @@ Dhito & Tresia Wedding © 2028
 </footer>
 
 <script>
-// ===== FIX AUDIO iPhone =====
 function openInvitation(){
+
 const opening = document.getElementById("opening");
 opening.style.opacity="0";
 
@@ -219,12 +313,31 @@ opening.style.display="none";
 },800);
 
 const music = document.getElementById("music");
+
+music.volume = 1;
 music.muted = false;
-music.play().catch(()=>{
-document.addEventListener('touchstart', ()=>{
+
+const playPromise = music.play();
+
+if (playPromise !== undefined) {
+playPromise.then(()=>{
+console.log("audio playing");
+}).catch(()=>{
+document.body.addEventListener('click', function(){
+music.play();
+},{once:true});
+
+document.body.addEventListener('touchstart', function(){
 music.play();
 },{once:true});
 });
+}
+
+}
+
+function copyRek(text){
+navigator.clipboard.writeText(text);
+alert("Nomor rekening berhasil disalin");
 }
 
 // ===== SHARE WHATSAPP =====
