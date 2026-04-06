@@ -8,17 +8,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins', sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+body{background:#faf6f7;color:#444;text-align:center}
+
+/* opening */
+.opening{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#c08a95;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:999;
+transition:1s;
 }
 
-body{
-background:#faf6f7;
-color:#444;
-text-align:center;
+.opening h1{
+font-family:'Playfair Display',serif;
+font-size:36px;
+margin-bottom:20px;
+}
+
+.opening button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+background:white;
+color:#c08a95;
+font-weight:600;
+cursor:pointer;
 }
 
 .hero{
@@ -37,35 +61,13 @@ font-family:'Playfair Display', serif;
 font-size:42px;
 }
 
-.hero p{
-margin-top:10px;
-font-size:18px;
-}
-
-.section{
-padding:60px 20px;
-}
+.section{padding:60px 20px}
 
 .title{
 font-family:'Playfair Display', serif;
 font-size:28px;
 margin-bottom:20px;
 color:#c08a95;
-}
-
-.couple{
-display:flex;
-justify-content:center;
-gap:30px;
-flex-wrap:wrap;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:15px;
-width:250px;
-box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
 .countdown{
@@ -78,7 +80,6 @@ color:#c08a95;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 gap:15px;
-padding:20px;
 }
 
 .gallery img{
@@ -95,6 +96,29 @@ border:none;
 border-radius:12px;
 }
 
+.rsvp{
+max-width:500px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.rsvp input,.rsvp textarea{
+padding:12px;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+.rsvp button{
+padding:12px;
+border:none;
+background:#c08a95;
+color:white;
+border-radius:8px;
+cursor:pointer;
+}
+
 .music-btn{
 position:fixed;
 bottom:20px;
@@ -106,7 +130,6 @@ border-radius:50%;
 width:50px;
 height:50px;
 cursor:pointer;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
 footer{
@@ -115,14 +138,22 @@ color:white;
 padding:25px;
 margin-top:30px;
 }
-
 </style>
 </head>
 
 <body>
 
+<!-- Opening -->
+<div class="opening" id="opening">
+<h1>Dhito & Tresia</h1>
+<p>Undangan Pernikahan</p>
+<br>
+<button onclick="openInvitation()">Buka Undangan</button>
+</div>
+
+<!-- Music -->
 <audio id="music" loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3?filename=wedding-romantic-113997.mp3">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3">
 </audio>
 
 <button class="music-btn" onclick="toggleMusic()">🎵</button>
@@ -133,46 +164,38 @@ margin-top:30px;
 </section>
 
 <section class="section">
-<div class="title">Pasangan Mempelai</div>
-<div class="couple">
-
-<div class="card">
-<h3>Dhito</h3>
-<p>Putra dari Bpk & Ibu</p>
-</div>
-
-<div class="card">
-<h3>Tresia</h3>
-<p>Putri dari Bpk & Ibu</p>
-</div>
-
-</div>
-</section>
-
-<section class="section">
 <div class="title">Save The Date</div>
-<div class="countdown" id="countdown"></div>
+<div id="countdown" class="countdown"></div>
 </section>
 
 <section class="section">
 <div class="title">Gallery Prewedding</div>
-
 <div class="gallery">
 <img src="https://images.unsplash.com/photo-1529634890524-0d1b7d0c3a3b">
 <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc">
 <img src="https://images.unsplash.com/photo-1520857014576-2c4f4c972b57">
 <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93">
 </div>
-
 </section>
 
 <section class="section">
-<div class="title">Lokasi Acara</div>
-
-<iframe 
-class="map"
-src="https://maps.google.com/maps?q=Tangerang%20Selatan&t=&z=13&ie=UTF8&iwloc=&output=embed">
+<div class="title">Lokasi</div>
+<iframe class="map"
+src="https://maps.google.com/maps?q=Tangerang%20Selatan&output=embed">
 </iframe>
+</section>
+
+<section class="section">
+<div class="title">RSVP</div>
+
+<form class="rsvp" onsubmit="sendRSVP(event)">
+<input type="text" placeholder="Nama" required>
+<input type="number" placeholder="Jumlah Tamu" required>
+<textarea placeholder="Ucapan"></textarea>
+<button type="submit">Kirim RSVP</button>
+</form>
+
+<div id="rsvp-result"></div>
 
 </section>
 
@@ -182,10 +205,19 @@ Dhito & Tresia Wedding © 2028
 
 <script>
 
-document.body.addEventListener('click', function(){
-document.getElementById("music").play();
-},{once:true});
+// opening + autoplay music
+function openInvitation(){
+document.getElementById("opening").style.opacity="0";
+setTimeout(()=>{
+document.getElementById("opening").style.display="none";
+},1000);
 
+let music = document.getElementById("music");
+music.volume = 0.7;
+music.play();
+}
+
+// toggle music
 function toggleMusic(){
 let music = document.getElementById("music");
 if(music.paused){
@@ -195,10 +227,10 @@ music.pause();
 }
 }
 
+// countdown
 var countDownDate = new Date("Nov 11, 2028 09:00:00").getTime();
 
 setInterval(function() {
-
 var now = new Date().getTime();
 var distance = countDownDate - now;
 
@@ -208,9 +240,16 @@ var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 document.getElementById("countdown").innerHTML =
-days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik";
+days+" Hari "+hours+" Jam "+minutes+" Menit "+seconds+" Detik";
+},1000);
 
-}, 1000);
+
+// RSVP fake submit
+function sendRSVP(e){
+e.preventDefault();
+document.getElementById("rsvp-result").innerHTML =
+"<br><b>Terima kasih atas konfirmasinya ❤️</b>";
+}
 
 </script>
 
