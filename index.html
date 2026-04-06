@@ -335,24 +335,27 @@ transform:scale(1);
 .music-player{
 position:fixed;
 bottom:20px;
-right:20px;
-background:white;
-border-radius:20px;
-padding:10px 15px;
-box-shadow:0 15px 35px rgba(0,0,0,0.15);
-z-index:999;
-transition:.4s;
-}
-
-.music-player.min{
-width:60px;
-overflow:hidden;
-}
-
-.music-main{
+left:50%;
+transform:translateX(-50%);
+background:rgba(255,255,255,0.95);
+backdrop-filter:blur(10px);
+border-radius:50px;
+padding:10px 20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.15);
 display:flex;
 align-items:center;
-gap:10px;
+gap:15px;
+z-index:999;
+}
+
+.music-text{
+text-align:left;
+}
+
+.music-title{
+font-size:12px;
+font-weight:600;
+color:#c08a95;
 }
 
 .music-btn{
@@ -363,34 +366,18 @@ width:40px;
 height:40px;
 border-radius:50%;
 cursor:pointer;
-}
-
-.music-min{
-border:none;
-background:none;
-font-size:20px;
-cursor:pointer;
-color:#c08a95;
-}
-
-.music-meta{
-text-align:left;
-}
-
-.music-title{
-font-size:12px;
-font-weight:600;
-color:#c08a95;
+font-size:16px;
 }
 
 .music-wave{
 display:flex;
 gap:2px;
+margin-top:2px;
 }
 
 .music-wave span{
 width:3px;
-height:5px;
+height:4px;
 background:#c08a95;
 animation:equalizer 1s infinite;
 }
@@ -402,6 +389,27 @@ animation:equalizer 1s infinite;
 @keyframes equalizer{
 0%,100%{height:4px}
 50%{height:14px}
+}
+
+.gallery-slider{
+position:relative;
+overflow:hidden;
+border-radius:20px;
+}
+
+.slides{
+display:flex;
+transition:transform .6s ease;
+}
+
+.slide{
+min-width:100%;
+}
+
+.slide img{
+width:100%;
+height:350px;
+object-fit:cover;
 }
 </style>
 </head>
@@ -423,20 +431,14 @@ animation:equalizer 1s infinite;
 <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3" type="audio/mp3">
 </audio>
 
-<div class="music-player" id="musicPlayer">
-<div class="music-main">
-
+<div class="music-player">
 <button class="music-btn" onclick="toggleMusic()">▶</button>
 
-<div class="music-meta">
-<div class="music-title">Dhito & Tresia</div>
+<div class="music-text">
+<div class="music-title">Dhito & Tresia Wedding</div>
 <div class="music-wave">
 <span></span><span></span><span></span><span></span>
 </div>
-</div>
-
-<button class="music-min" onclick="togglePlayer()">–</button>
-
 </div>
 </div>
 
@@ -452,11 +454,26 @@ animation:equalizer 1s infinite;
 
 <section class="section">
 <div class="title">Gallery Prewedding</div>
-<div class="gallery">
+<div class="gallery-slider">
+<div class="slides" id="slides">
+
+<div class="slide">
 <img src="https://images.unsplash.com/photo-1529634890524-0d1b7d0c3a3b">
+</div>
+
+<div class="slide">
 <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc">
+</div>
+
+<div class="slide">
 <img src="https://images.unsplash.com/photo-1520857014576-2c4f4c972b57">
+</div>
+
+<div class="slide">
 <img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93">
+</div>
+
+</div>
 </div>
 </section>
 
@@ -537,6 +554,47 @@ Dhito & Tresia Wedding © 2028
 </footer>
 
 <script>
+// ===== GALLERY SWIPE =====
+let index = 0;
+const slides = document.getElementById("slides");
+
+let startX = 0;
+let endX = 0;
+
+slides.addEventListener("touchstart", e=>{
+startX = e.touches[0].clientX;
+});
+
+slides.addEventListener("touchend", e=>{
+endX = e.changedTouches[0].clientX;
+
+if(startX - endX > 50){
+nextSlide();
+}
+
+if(endX - startX > 50){
+prevSlide();
+}
+});
+
+function nextSlide(){
+index++;
+if(index > slides.children.length-1) index = 0;
+updateSlide();
+}
+
+function prevSlide(){
+index--;
+if(index < 0) index = slides.children.length-1;
+updateSlide();
+}
+
+function updateSlide(){
+slides.style.transform = `translateX(-${index * 100}%)`;
+}
+
+// auto slide
+setInterval(nextSlide,5000);
 
 // ================= COPY REKENING =================
 function copyRek(text){
@@ -588,10 +646,6 @@ opacity:0;
 }`;
 document.head.appendChild(style);
 
-function togglePlayer(){
-document.getElementById("musicPlayer").classList.toggle("min");
-}
-
 function toggleMusic(){
 const music = document.getElementById("music");
 const btn = document.querySelector(".music-btn");
@@ -604,7 +658,6 @@ music.pause();
 btn.innerHTML="▶";
 }
 }
-
 
 // ================= COUNTDOWN =================
 var countDownDate = new Date("Nov 11, 2028 09:00:00").getTime();
