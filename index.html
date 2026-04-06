@@ -411,21 +411,22 @@ Dhito & Tresia Wedding © 2028
 </footer>
 
 <script>
+
+// ================= COPY REKENING =================
 function copyRek(text){
 navigator.clipboard.writeText(text);
 alert("Nomor rekening berhasil disalin");
 }
 
-// ===== SHARE WHATSAPP =====
+// ================= SHARE WHATSAPP =================
 function shareWA(){
 let text = encodeURIComponent(
 "Undangan Pernikahan Dhito & Tresia\n\n11 November 2028\n\nSilakan buka undangan berikut:\n" + window.location.href
 );
-
 window.open("https://wa.me/?text="+text,"_blank");
 }
 
-// ===== ANIMASI BUNGA JATUH =====
+// ================= BUNGA JATUH =================
 function createFlower(){
 const flower = document.createElement("div");
 flower.innerHTML="🌸";
@@ -435,18 +436,15 @@ flower.style.left=Math.random()*100+"vw";
 flower.style.fontSize=(Math.random()*10+15)+"px";
 flower.style.opacity=Math.random();
 flower.style.animation="fall linear forwards";
-flower.style.animationDuration=(Math.random()*5+5)+"s";
+flower.style.animationDuration=(Math.random()*5+6)+"s";
 
 document.body.appendChild(flower);
 
-setTimeout(()=>{
-flower.remove();
-},10000);
+setTimeout(()=>flower.remove(),12000);
 }
 
-setInterval(createFlower, 500);
+setInterval(createFlower, 900);
 
-// ===== CSS animasi bunga =====
 const style = document.createElement('style');
 style.innerHTML = `
 @keyframes fall {
@@ -456,17 +454,8 @@ transform: translateY(110vh) rotate(360deg);
 }`;
 document.head.appendChild(style);
 
-// toggle music
-function toggleMusic(){
-let music = document.getElementById("music");
-if(music.paused){
-music.play();
-}else{
-music.pause();
-}
-}
 
-// countdown
+// ================= COUNTDOWN =================
 var countDownDate = new Date("Nov 11, 2028 09:00:00").getTime();
 
 setInterval(function() {
@@ -483,29 +472,17 @@ days+" Hari "+hours+" Jam "+minutes+" Menit "+seconds+" Detik";
 },1000);
 
 
-// RSVP fake submit
+// ================= RSVP =================
 function sendRSVP(e){
 e.preventDefault();
 document.getElementById("rsvp-result").innerHTML =
 "<br><b>Terima kasih atas konfirmasinya ❤️</b>";
 }
 
-let audioUnlocked = false;
 
-function openInvitation(){
-
-const opening = document.getElementById("opening");
-opening.style.opacity="0";
-setTimeout(()=>{
-opening.style.display="none";
-},800);
-
-unlockAudio();
-
-}
-
-let audioContext;
+// ================= MUSIC SYSTEM (FIX iPHONE) =================
 let musicStarted = false;
+let audioContext;
 
 function openInvitation(){
 
@@ -517,7 +494,6 @@ opening.style.display="none";
 },800);
 
 startMusic();
-
 }
 
 function startMusic(){
@@ -530,7 +506,6 @@ musicStarted = true;
 music.volume = 0;
 music.muted = false;
 
-// unlock iOS
 try{
 audioContext = new (window.AudioContext || window.webkitAudioContext)();
 const track = audioContext.createMediaElementSource(music);
@@ -538,31 +513,28 @@ track.connect(audioContext.destination);
 audioContext.resume();
 }catch(e){}
 
-// play
 music.play().then(()=>{
 fadeIn(music);
 }).catch(()=>{
 document.body.addEventListener("touchstart", startMusic, {once:true});
 document.body.addEventListener("click", startMusic, {once:true});
 });
-
 }
 
 function fadeIn(audio){
 let vol = 0;
-let interval = setInterval(()=>{
+let fade = setInterval(()=>{
 if(vol < 1){
 vol += 0.05;
 audio.volume = vol;
 }else{
-clearInterval(interval);
+clearInterval(fade);
 }
 },200);
 }
 
 function toggleMusic(){
 const music = document.getElementById("music");
-
 if(music.paused){
 music.play();
 }else{
@@ -570,14 +542,6 @@ music.pause();
 }
 }
 
-document.body.addEventListener("click", function(){
-if(music.paused){
-music.play().catch(()=>{});
-}
-},{once:true});
-});
-
 </script>
-
 </body>
 </html>
