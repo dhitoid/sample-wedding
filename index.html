@@ -3,28 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wedding Invitation</title>
+<title>Dhito & Tresia Wedding</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 
 <style>
-* {
+*{
 margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Poppins', sans-serif;
 }
 
-body {
-background:#f9f9f9;
-color:#333;
+body{
+background:#faf6f7;
+color:#444;
 text-align:center;
 }
 
-.hero {
+.hero{
 height:100vh;
-background:linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
-url('https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1470') center/cover;
+background:linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),
+url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1470') center/cover;
 color:white;
 display:flex;
 flex-direction:column;
@@ -32,60 +32,88 @@ justify-content:center;
 align-items:center;
 }
 
-.hero h1 {
+.hero h1{
 font-family:'Playfair Display', serif;
-font-size:40px;
-margin-bottom:10px;
+font-size:42px;
 }
 
-.hero p {
+.hero p{
+margin-top:10px;
 font-size:18px;
 }
 
-.section {
+.section{
 padding:60px 20px;
-background:white;
-margin-bottom:10px;
 }
 
-.couple {
+.title{
+font-family:'Playfair Display', serif;
+font-size:28px;
+margin-bottom:20px;
+color:#c08a95;
+}
+
+.couple{
 display:flex;
 justify-content:center;
-gap:40px;
+gap:30px;
 flex-wrap:wrap;
 }
 
-.card {
-background:#fafafa;
+.card{
+background:white;
 padding:20px;
-border-radius:12px;
+border-radius:15px;
 width:250px;
-box-shadow:0 5px 15px rgba(0,0,0,0.05);
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
-.countdown {
-font-size:24px;
+.countdown{
+font-size:22px;
 font-weight:600;
-margin-top:20px;
+color:#c08a95;
 }
 
-.music-btn {
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+padding:20px;
+}
+
+.gallery img{
+width:100%;
+height:250px;
+object-fit:cover;
+border-radius:12px;
+}
+
+.map{
+width:100%;
+height:300px;
+border:none;
+border-radius:12px;
+}
+
+.music-btn{
 position:fixed;
 bottom:20px;
 right:20px;
-background:#000;
+background:#c08a95;
 color:white;
 border:none;
 border-radius:50%;
 width:50px;
 height:50px;
 cursor:pointer;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-footer {
-padding:30px;
-background:#111;
+footer{
+background:#c08a95;
 color:white;
+padding:25px;
+margin-top:30px;
 }
 
 </style>
@@ -93,50 +121,67 @@ color:white;
 
 <body>
 
-<!-- Musik -->
 <audio id="music" loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3?filename=wedding-romantic-113997.mp3" type="audio/mp3">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3?filename=wedding-romantic-113997.mp3">
 </audio>
 
 <button class="music-btn" onclick="toggleMusic()">🎵</button>
 
-<!-- Hero -->
 <section class="hero">
-<h1>Dhito & Pasangan</h1>
-<p>Kami Mengundang Anda ke Pernikahan Kami</p>
+<h1>Dhito & Tresia</h1>
+<p>11 November 2028</p>
 </section>
 
-<!-- Couple -->
 <section class="section">
-<h2>Pasangan Mempelai</h2>
-<br>
+<div class="title">Pasangan Mempelai</div>
 <div class="couple">
+
 <div class="card">
-<h3>Mempelai Pria</h3>
+<h3>Dhito</h3>
 <p>Putra dari Bpk & Ibu</p>
 </div>
 
 <div class="card">
-<h3>Mempelai Wanita</h3>
+<h3>Tresia</h3>
 <p>Putri dari Bpk & Ibu</p>
 </div>
+
 </div>
 </section>
 
-<!-- Tanggal -->
 <section class="section">
-<h2>Save The Date</h2>
-<p>20 Desember 2026</p>
+<div class="title">Save The Date</div>
 <div class="countdown" id="countdown"></div>
 </section>
 
+<section class="section">
+<div class="title">Gallery Prewedding</div>
+
+<div class="gallery">
+<img src="https://images.unsplash.com/photo-1529634890524-0d1b7d0c3a3b">
+<img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc">
+<img src="https://images.unsplash.com/photo-1520857014576-2c4f4c972b57">
+<img src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93">
+</div>
+
+</section>
+
+<section class="section">
+<div class="title">Lokasi Acara</div>
+
+<iframe 
+class="map"
+src="https://maps.google.com/maps?q=Tangerang%20Selatan&t=&z=13&ie=UTF8&iwloc=&output=embed">
+</iframe>
+
+</section>
+
 <footer>
-<p>Terima kasih atas doa & restunya</p>
+Dhito & Tresia Wedding © 2028
 </footer>
 
 <script>
 
-// autoplay setelah interaksi
 document.body.addEventListener('click', function(){
 document.getElementById("music").play();
 },{once:true});
@@ -150,10 +195,9 @@ music.pause();
 }
 }
 
-// countdown
-var countDownDate = new Date("Dec 20, 2026 10:00:00").getTime();
+var countDownDate = new Date("Nov 11, 2028 09:00:00").getTime();
 
-var x = setInterval(function() {
+setInterval(function() {
 
 var now = new Date().getTime();
 var distance = countDownDate - now;
@@ -164,13 +208,7 @@ var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 document.getElementById("countdown").innerHTML =
-days + " Hari " + hours + " Jam "
-+ minutes + " Menit " + seconds + " Detik ";
-
-if (distance < 0) {
-clearInterval(x);
-document.getElementById("countdown").innerHTML = "Acara Dimulai";
-}
+days + " Hari " + hours + " Jam " + minutes + " Menit " + seconds + " Detik";
 
 }, 1000);
 
