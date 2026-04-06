@@ -825,12 +825,6 @@ document.getElementById("rsvp-result").innerHTML =
 }
 
 // ================= MUSIC ENGINE PRO =================
-let audioCtx;
-let analyser;
-let dataArray;
-let source;
-let musicStarted = false;
-
 function openInvitation(){
 
 const opening = document.getElementById("opening");
@@ -840,8 +834,16 @@ setTimeout(()=>{
 opening.style.display="none";
 },800);
 
+// autoplay langsung
 startMusic();
+
 }
+
+let audioCtx;
+let analyser;
+let dataArray;
+let source;
+let musicStarted = false;
 
 function startMusic(){
 
@@ -852,16 +854,21 @@ const music = document.getElementById("music");
 const player = document.querySelector(".music-player");
 const btn = document.querySelector(".music-btn");
 
-// FORCE PLAY (lebih stabil)
+// autoplay
+music.currentTime = 0;
 music.volume = 0.4;
-music.play().catch(()=>{});
 
-// Setup Equalizer tanpa memutus audio
+const playPromise = music.play();
+if(playPromise !== undefined){
+playPromise.catch(()=>{});
+}
+
+// equalizer
 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 source = audioCtx.createMediaElementSource(music);
-
 analyser = audioCtx.createAnalyser();
+
 analyser.fftSize = 64;
 
 source.connect(analyser);
@@ -875,7 +882,6 @@ player.classList.add("playing");
 btn.innerHTML = "❚❚";
 }
 
-// ================= REAL EQUALIZER =================
 function animateEQ(){
 
 const bars = document.querySelectorAll(".music-wave span");
@@ -889,15 +895,13 @@ analyser.getByteFrequencyData(dataArray);
 
 bars.forEach((bar,i)=>{
 let value = dataArray[i] / 255;
-let height = (value * 20) + 4;
-bar.style.height = height + "px";
+bar.style.height = (value * 20 + 4) + "px";
 });
 }
 
 loop();
 }
 
-// ================= TOGGLE =================
 function toggleMusic(){
 
 const music = document.getElementById("music");
@@ -905,44 +909,24 @@ const btn = document.querySelector(".music-btn");
 const player = document.querySelector(".music-player");
 
 if(music.paused){
-
 music.play();
 player.classList.add("playing");
 btn.innerHTML = "❚❚";
-
 }else{
-
 music.pause();
 player.classList.remove("playing");
 btn.innerHTML = "▶";
-
 }
 }
 
-
-// ================= AUTO PAUSE TAB =================
-document.addEventListener("visibilitychange", function(){
-
+// auto pause saat tab ganti
+document.addEventListener("visibilitychange", () => {
 const music = document.getElementById("music");
-const player = document.querySelector(".music-player");
-const btn = document.querySelector(".music-btn");
 
 if(document.hidden){
-
-if(!music.paused){
 music.pause();
-player.classList.remove("playing");
-btn.innerHTML = "▶";
-}
-
-}else{
-
-if(musicStarted){
+}else if(musicStarted){
 music.play().catch(()=>{});
-player.classList.add("playing");
-btn.innerHTML = "❚❚";
-}
-
 }
 });
 
