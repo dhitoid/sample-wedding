@@ -61,6 +61,19 @@ font-family:'Playfair Display', serif;
 font-size:42px;
 }
 
+.section{
+padding:70px 20px;
+max-width:1000px;
+margin:auto;
+}
+
+.section:nth-child(even){
+background:white;
+border-radius:20px;
+margin-top:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+}
+
 .section{padding:60px 20px}
 
 .title{
@@ -238,6 +251,38 @@ z-index:9999;
 overflow:hidden;
 }
 
+.opening::before{
+content:"";
+position:absolute;
+width:200%;
+height:200%;
+background:url("https://www.transparenttextures.com/patterns/diamond-upholstery.png");
+opacity:.2;
+animation:zoomBg 20s linear infinite;
+}
+
+@keyframes zoomBg{
+from{transform:scale(1);}
+to{transform:scale(1.3);}
+}
+
+.opening-content{
+animation:cinematic 2s ease;
+}
+
+@keyframes cinematic{
+from{
+opacity:0;
+transform:translateY(40px) scale(.9);
+letter-spacing:5px;
+}
+to{
+opacity:1;
+transform:translateY(0) scale(1);
+letter-spacing:1px;
+}
+}
+
 .opening-content{
 color:white;
 text-align:center;
@@ -286,6 +331,78 @@ opacity:1;
 transform:scale(1);
 }
 }
+
+.music-player{
+position:fixed;
+bottom:20px;
+right:20px;
+background:white;
+border-radius:20px;
+padding:10px 15px;
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+z-index:999;
+transition:.4s;
+}
+
+.music-player.min{
+width:60px;
+overflow:hidden;
+}
+
+.music-main{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.music-btn{
+background:#c08a95;
+color:white;
+border:none;
+width:40px;
+height:40px;
+border-radius:50%;
+cursor:pointer;
+}
+
+.music-min{
+border:none;
+background:none;
+font-size:20px;
+cursor:pointer;
+color:#c08a95;
+}
+
+.music-meta{
+text-align:left;
+}
+
+.music-title{
+font-size:12px;
+font-weight:600;
+color:#c08a95;
+}
+
+.music-wave{
+display:flex;
+gap:2px;
+}
+
+.music-wave span{
+width:3px;
+height:5px;
+background:#c08a95;
+animation:equalizer 1s infinite;
+}
+
+.music-wave span:nth-child(2){animation-delay:.2s}
+.music-wave span:nth-child(3){animation-delay:.4s}
+.music-wave span:nth-child(4){animation-delay:.6s}
+
+@keyframes equalizer{
+0%,100%{height:4px}
+50%{height:14px}
+}
 </style>
 </head>
 
@@ -306,11 +423,20 @@ transform:scale(1);
 <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3" type="audio/mp3">
 </audio>
 
-<div class="music-player">
-<button class="music-btn" onclick="toggleMusic()">♪</button>
-<div class="music-info">Wedding Music</div>
+<div class="music-player" id="musicPlayer">
+<div class="music-main">
+
+<button class="music-btn" onclick="toggleMusic()">▶</button>
+
+<div class="music-meta">
+<div class="music-title">Dhito & Tresia</div>
 <div class="music-wave">
-<span></span><span></span><span></span>
+<span></span><span></span><span></span><span></span>
+</div>
+</div>
+
+<button class="music-min" onclick="togglePlayer()">–</button>
+
 </div>
 </div>
 
@@ -390,7 +516,7 @@ src="https://maps.google.com/maps?q=Tangerang%20Selatan&output=embed">
 <h3>Bank BCA</h3>
 <p>0374818216</p>
 <p>a.n Dhito</p>
-<button onclick="copyRek('1234567890')">Copy Rekening</button>
+<button onclick="copyRek('0374818216')">Copy Rekening</button>
 </div>
 
 <div class="card-amplop">
@@ -429,30 +555,55 @@ window.open("https://wa.me/?text="+text,"_blank");
 // ================= BUNGA JATUH =================
 function createFlower(){
 const flower = document.createElement("div");
-flower.innerHTML="🌸";
+
+const flowers = ["🌸","🌺","💮","🌼"];
+flower.innerHTML = flowers[Math.floor(Math.random()*flowers.length)];
+
 flower.style.position="fixed";
 flower.style.top="-20px";
 flower.style.left=Math.random()*100+"vw";
-flower.style.fontSize=(Math.random()*10+15)+"px";
+flower.style.fontSize=(Math.random()*15+10)+"px";
 flower.style.opacity=Math.random();
-flower.style.animation="fall linear forwards";
-flower.style.animationDuration=(Math.random()*5+6)+"s";
+flower.style.pointerEvents="none";
+
+let duration = Math.random()*5+8;
+let rotate = Math.random()*360;
+
+flower.style.animation = `fall ${duration}s linear forwards`;
 
 document.body.appendChild(flower);
 
-setTimeout(()=>flower.remove(),12000);
+setTimeout(()=>flower.remove(),duration*1000);
 }
 
-setInterval(createFlower, 900);
+setInterval(createFlower,1200);
 
 const style = document.createElement('style');
 style.innerHTML = `
-@keyframes fall {
-to {
-transform: translateY(110vh) rotate(360deg);
+@keyframes fall{
+to{
+transform:translateY(110vh) rotate(360deg);
+opacity:0;
 }
 }`;
 document.head.appendChild(style);
+
+function togglePlayer(){
+document.getElementById("musicPlayer").classList.toggle("min");
+}
+
+function toggleMusic(){
+const music = document.getElementById("music");
+const btn = document.querySelector(".music-btn");
+
+if(music.paused){
+music.play();
+btn.innerHTML="❚❚";
+}else{
+music.pause();
+btn.innerHTML="▶";
+}
+}
 
 
 // ================= COUNTDOWN =================
