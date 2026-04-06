@@ -475,8 +475,8 @@ font-weight:600;
 </div>
 
 <!-- Music -->
-<audio id="music" loop preload="auto" playsinline webkit-playsinline>
-<source src="https://cdn.pixabay.com/download/audio/2023/06/28/audio_06f6c9dc9b.mp3" type="audio/mp3">
+<audio id="music" loop preload="auto" playsinline>
+<source src="https://cdn.pixabay.com/download/audio/2023/06/28/audio_06f6c9dc9b.mp3">
 </audio>
 
 <div class="music-player">
@@ -852,11 +852,12 @@ const music = document.getElementById("music");
 const player = document.querySelector(".music-player");
 const btn = document.querySelector(".music-btn");
 
-audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// FORCE PLAY (lebih stabil)
+music.volume = 0.4;
+music.play().catch(()=>{});
 
-if(audioCtx.state === "suspended"){
-audioCtx.resume();
-}
+// Setup Equalizer tanpa memutus audio
+audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 source = audioCtx.createMediaElementSource(music);
 
@@ -868,26 +869,10 @@ analyser.connect(audioCtx.destination);
 
 dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-music.volume = 0;
-music.play();
-
-fadeIn(music);
 animateEQ();
 
 player.classList.add("playing");
 btn.innerHTML = "❚❚";
-}
-
-function fadeIn(audio){
-let vol = 0;
-let fade = setInterval(()=>{
-vol += 0.02;
-audio.volume = vol;
-
-if(vol >= 0.4){
-clearInterval(fade);
-}
-},120);
 }
 
 // ================= REAL EQUALIZER =================
@@ -904,7 +889,7 @@ analyser.getByteFrequencyData(dataArray);
 
 bars.forEach((bar,i)=>{
 let value = dataArray[i] / 255;
-let height = (value * 18) + 4;
+let height = (value * 20) + 4;
 bar.style.height = height + "px";
 });
 }
@@ -933,6 +918,33 @@ btn.innerHTML = "▶";
 
 }
 }
+
+
+// ================= AUTO PAUSE TAB =================
+document.addEventListener("visibilitychange", function(){
+
+const music = document.getElementById("music");
+const player = document.querySelector(".music-player");
+const btn = document.querySelector(".music-btn");
+
+if(document.hidden){
+
+if(!music.paused){
+music.pause();
+player.classList.remove("playing");
+btn.innerHTML = "▶";
+}
+
+}else{
+
+if(musicStarted){
+music.play().catch(()=>{});
+player.classList.add("playing");
+btn.innerHTML = "❚❚";
+}
+
+}
+});
 
 </script>
 </body>
