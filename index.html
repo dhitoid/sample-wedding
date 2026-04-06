@@ -288,6 +288,7 @@ bottom:20px;
 right:20px;
 z-index:9999;
 animation:floaty 4s ease-in-out infinite;
+display:none;
 }
 
 /* glass button */
@@ -548,14 +549,20 @@ font-weight:600;
 <source src="./assets/music/lagu-wedding.mp3" type="audio/mpeg">
 </audio>
 
-<div class="music-player">
+<div class="music-player" id="musicPlayer">
 <button class="music-btn" onclick="toggleMusic()">
+
+<div class="icon-play"></div>
+
+<div class="icon-pause"></div>
+
 <div class="spotify-eq">
 <span></span>
 <span></span>
 <span></span>
 <span></span>
 </div>
+
 </button>
 </div>
 
@@ -903,7 +910,10 @@ setTimeout(()=>{
 opening.style.display="none";
 },800);
 
-// autoplay langsung
+// tampilkan player setelah buka
+document.getElementById("musicPlayer").style.display="block";
+
+// autoplay
 startMusic();
 
 }
@@ -948,7 +958,6 @@ dataArray = new Uint8Array(analyser.frequencyBinCount);
 animateEQ();
 
 player.classList.add("playing");
-btn.innerHTML = "❚❚";
 }
 
 function animateEQ(){
