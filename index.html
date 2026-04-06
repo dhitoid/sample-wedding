@@ -528,8 +528,8 @@ font-weight:600;
 </div>
 
 <!-- Music -->
-<audio id="music" loop preload="auto" playsinline webkit-playsinline>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b7c5f.mp3" type="audio/mp3">
+<audio id="music" loop preload="auto" playsinline webkit-playsinline muted>
+<source src="https://cdn.pixabay.com/download/audio/2023/06/28/audio_06f6c9dc9b.mp3" type="audio/mp3">
 </audio>
 
 <div class="music-player">
@@ -853,29 +853,6 @@ opacity:0;
 }`;
 document.head.appendChild(style);
 
-function toggleMusic(){
-const music = document.getElementById("music");
-const player = document.querySelector(".music-player");
-const btn = document.querySelector(".music-btn");
-
-if(music.paused){
-music.play();
-player.classList.add("playing");
-btn.innerHTML = `
-<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-<rect x="6" y="4" width="4" height="16"/>
-<rect x="14" y="4" width="4" height="16"/>
-</svg>`;
-}else{
-music.pause();
-player.classList.remove("playing");
-btn.innerHTML = `
-<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-<polygon points="5,3 19,12 5,21"/>
-</svg>`;
-}
-}
-
 // ================= COUNTDOWN =================
 var countDownDate = new Date("Nov 11, 2028 09:00:00").getTime();
 
@@ -901,9 +878,8 @@ document.getElementById("rsvp-result").innerHTML =
 }
 
 
-// ================= MUSIC SYSTEM (FIX iPHONE) =================
+// ================= MUSIC SYSTEM UNIVERSAL =================
 let musicStarted = false;
-let audioContext;
 
 function openInvitation(){
 
@@ -919,27 +895,52 @@ startMusic();
 
 function startMusic(){
 
-const music = document.getElementById("music");
-
 if(musicStarted) return;
 musicStarted = true;
 
-music.volume = 0;
-music.muted = false;
+const music = document.getElementById("music");
+const player = document.querySelector(".music-player");
 
-try{
-audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const track = audioContext.createMediaElementSource(music);
-track.connect(audioContext.destination);
-audioContext.resume();
-}catch(e){}
+music.muted = false;
+music.volume = 0.3;
 
 music.play().then(()=>{
-fadeIn(music);
+player.classList.add("playing");
 }).catch(()=>{
-document.body.addEventListener("touchstart", startMusic, {once:true});
-document.body.addEventListener("click", startMusic, {once:true});
+// fallback iOS
+document.body.addEventListener("touchstart", forcePlay, {once:true});
+document.body.addEventListener("click", forcePlay, {once:true});
 });
+}
+
+function forcePlay(){
+const music = document.getElementById("music");
+music.muted = false;
+music.play();
+}
+
+// tombol play pause
+function toggleMusic(){
+const music = document.getElementById("music");
+const player = document.querySelector(".music-player");
+const btn = document.querySelector(".music-btn");
+
+if(music.paused){
+music.play();
+player.classList.add("playing");
+btn.innerHTML = `
+<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+<rect x="6" y="4" width="4" height="16"/>
+<rect x="14" y="4" width="4" height="16"/>
+</svg>`;
+}else{
+music.pause();
+player.classList.remove("playing");
+btn.innerHTML = `
+<svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+<polygon points="5,3 19,12 5,21"/>
+</svg>`;
+}
 }
 
 function fadeIn(audio){
